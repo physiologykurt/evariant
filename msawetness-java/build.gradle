@@ -1,0 +1,32 @@
+apply plugin:'application'
+
+mainClassName = "msawetness.Main"
+
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+gradle.projectsEvaluated {
+	tasks.withType(JavaCompile) {
+		options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation" << "-source" << "1.8" << "-target" << "1.8"
+	}
+}
+
+dependencies {
+	compile 'com.opencsv:opencsv:3.5'
+}
+
+jar {
+	manifest {
+		attributes("Main-Class": 'lucenequerytool.Main');
+	}
+}
+
+task fatJar(type: Jar) {
+	baseName = project.name + '-all'
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	with jar
+}
+
